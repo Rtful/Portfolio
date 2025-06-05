@@ -3,22 +3,13 @@ import ImageListItem from '@mui/material/ImageListItem';
 import {useTheme} from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import {useImageCarousel} from "../ImageCarousel/UseImageCarousel.ts";
 import {Orientation} from "../../interfaces/Orientation.ts";
-
-function srcset(image: string, size: number, rows = 1, cols = 1) {
-    return {
-        src: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format`,
-        srcSet: `${image}?w=${size * cols}&h=${
-            size * rows
-        }&fit=crop&auto=format&dpr=2 2x`,
-    };
-}
+import {ImageWithOrientation} from "../../interfaces/ImageWithOrientation.ts";
 
 export const ImageGallery = () => {
-    const {showPopup, setImages, setCurrentIndex} = useImageCarousel();
-    const [test, setTest] = useState<ImageWithOrientation[]>([]);
+    const {showPopup, setImages, setCurrentIndex, images} = useImageCarousel();
 
     const theme = useTheme();
 
@@ -35,11 +26,7 @@ export const ImageGallery = () => {
     else if (isLg) cols = 4;
     else if (isXl) cols = 5;
 
-
     type ImageData = { path: string; name: string };
-    type ImageWithOrientation = ImageData & { orientation: Orientation };
-
-    // const [currentIndex, setCurrentIndex] = React.useState(0);
 
     useEffect(() => {
         async function classifyImageOrientations(images: ImageData[]): Promise<ImageWithOrientation[]> {
@@ -56,7 +43,6 @@ export const ImageGallery = () => {
                         resolve({...img, orientation});
                     };
                     image.onerror = () => {
-                        // Fallback if image can't be loaded
                         resolve({...img, orientation: 'landscape'});
                     };
                     image.src = img.path;
@@ -65,51 +51,30 @@ export const ImageGallery = () => {
         }
 
         classifyImageOrientations(itemData).then((calculatedImages) => {
-            setTest(calculatedImages);
             setImages(calculatedImages);
         });
-    }, [setImages, setTest]);
+    }, [setImages]);
 
     return (
         <ImageList
             sx={{width: "100%", height: "auto"}}
-            variant="quilted"
+            variant="masonry"
             cols={cols}
         >
-            {test.map((item, index) => {
-                const isPortrait = item.orientation === 'portrait';
-
-                let cols = 1;
-                let rows = 1;
-
-                if (item.orientation === 'portrait') {
-                    cols = 1;
-                    rows = 2;
-                } else if (item.orientation === 'landscape') {
-                    cols = 1;
-                    rows = 1;
-                }
-
-                return (
-                    <ImageListItem
-                        key={item.path}
-                        cols={cols || 1}
-                        rows={rows || 1}
-                        className={isPortrait ? 'portrait-item' : 'landscape-item'}
-                    >
-                        <img
-                            {...srcset(item.path, 121, rows, cols)}
-                            alt={item.name}
-                            loading="lazy"
-                            onClick={() => {
-                                // setImage(itemData[index].path);
-                                setCurrentIndex(index);
-                                showPopup();
-                            }}
-                        />
-                    </ImageListItem>
-                );
-            })}
+            {images.map((item, index) => (
+                <ImageListItem key={item.path}>
+                    <img
+                        src={item.path}
+                        alt={item.name}
+                        loading="lazy"
+                        tabIndex={index}
+                        onClick={() => {
+                            setCurrentIndex(index);
+                            showPopup();
+                        }}
+                    />
+                </ImageListItem>
+            ))}
         </ImageList>
     );
 }
@@ -119,11 +84,11 @@ const itemData = [
         path: 'src/assets/img/nice_house_blue_sky.JPG',
         name: 'A beautiful house in Kyoto'
     }, {
-        path: 'src/assets/img/high.jpg',
-        name: 'Very high image'
+        path: 'src/assets/img/square.jpg',
+        name: 'A square image'
     }, {
-        path: 'src/assets/img/wide.jpg',
-        name: 'Very wide image'
+        path: 'src/assets/img/gravestones.JPG',
+        name: 'Gravestones in west Kyoto'
     }, {
         path: 'src/assets/img/white_flowers.JPG',
         name: 'Breakfast'

@@ -1,15 +1,16 @@
 import './Polaroid.css';
 import Dialog from "@mui/material/Dialog";
 import React from "react";
-import {Image} from "../../interfaces/Image.ts";
+import {ImageWithOrientation} from "../../interfaces/ImageWithOrientation.ts";
 
 type PolaroidProps = {
     isOpen?: boolean;
     elevation?: number;
     style?: object
     onClick?: () => void
+    onClose?: () => void
     noBackdrop?: boolean
-    image: Image;
+    image: ImageWithOrientation;
 };
 
 export const Polaroid: React.FC<PolaroidProps> = ({
@@ -20,6 +21,7 @@ export const Polaroid: React.FC<PolaroidProps> = ({
                                                       noBackdrop = false,
                                                       onClick = () => {
                                                       },
+    onClose = () => {},
                                                   }) => {
 
     const paperProps = {
@@ -41,7 +43,10 @@ export const Polaroid: React.FC<PolaroidProps> = ({
         open={isOpen}
         onClick={onClick}
         className={noBackdrop ? "no-backdrop" : ""}
-        slotProps={paperProps}>
+        slotProps={paperProps}
+        onClose={onClose}
+        closeAfterTransition={false}
+    >
         <div className="modal-wrap" onClick={onClick}
              style={{
                  background: '#ffffff',

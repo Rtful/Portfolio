@@ -1,7 +1,7 @@
-import React, {createContext, ReactNode, useState} from 'react';
+import React, {createContext, ReactNode, useEffect, useState} from 'react';
 import {Polaroid} from "../Polaroid/Polaroid.tsx";
 import {Backdrop} from "@mui/material";
-import {Image} from "../../interfaces/Image.ts";
+import {ImageWithOrientation} from "../../interfaces/ImageWithOrientation.ts";
 
 interface ImageCarouselProviderProps {
     children: ReactNode;
@@ -10,7 +10,8 @@ interface ImageCarouselProviderProps {
 interface ImageCarouselContextType {
     showPopup: () => void;
     setCurrentIndex: (index: number) => void;
-    setImages: (images: Image[]) => void;
+    setImages: (images: ImageWithOrientation[]) => void;
+    images: ImageWithOrientation[];
 }
 
 export const ImageCarouselContext = createContext<ImageCarouselContextType | undefined>(undefined);
@@ -20,7 +21,7 @@ export const ImageCarouselContext = createContext<ImageCarouselContextType | und
  */
 export const ImageCarouselProvider: React.FC<ImageCarouselProviderProps> = ({children}) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [images, setImages] = useState<Image[]>([]);
+    const [images, setImages] = useState<ImageWithOrientation[]>([]);
     const [currentIndex, setCurrentIndex] = useState(0);
 
     const showPopup = () => {
@@ -29,20 +30,61 @@ export const ImageCarouselProvider: React.FC<ImageCarouselProviderProps> = ({chi
 
     const closePopup = () => {
         setIsOpen(false);
+
+        // This is to prevent the aria-hidden warning when the dialog is closed
+        const el = document.querySelector('[tabindex="' + currentIndex + '"]');
+        if (el instanceof HTMLElement) {
+            el.focus();
+        }
     };
+
+    useEffect(() => {
+        function handleKeyDown(e: KeyboardEvent) {
+            if (!isOpen) return;
+            if (e.key === "Escape") {
+                closePopup();
+            } else if (e.key === "ArrowRight" && currentIndex < images.length - 1) {
+                setCurrentIndex(currentIndex + 1);
+            } else if (e.key === "ArrowLeft" && currentIndex > 0) {
+                setCurrentIndex(currentIndex - 1);
+            }
+        }
+
+        window.addEventListener("keydown", handleKeyDown);
+
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+        };
+    });
 
     const previousImage = images[currentIndex - 1];
     const currentImage = images[currentIndex];
     const nextImage = images[currentIndex + 1];
 
+    const previousImageStyle: React.CSSProperties = {
+        border: '10px solid blue',
+    };
+    const nextImageStyle: React.CSSProperties = {
+        border: '10px solid red',
+    };
+
+    if (currentImage?.orientation === 'portrait') {
+        previousImageStyle.marginLeft = '-50%';
+        nextImageStyle.marginRight = '-50%';
+    } else {
+        previousImageStyle.marginTop = '-50%';
+        nextImageStyle.marginBottom = '-50%';
+    }
+
     return (
-        <ImageCarouselContext.Provider value={{showPopup, setImages, setCurrentIndex}}>
+        <ImageCarouselContext.Provider value={{showPopup, setImages, setCurrentIndex, images}}>
             <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet"/>
             {children}
             <>
                 <Backdrop
                     open={isOpen}
                     onClick={closePopup}
+                    onKeyDown={(e) => e.stopPropagation()}
                 />
 
                 {nextImage && (
@@ -50,9 +92,10 @@ export const ImageCarouselProvider: React.FC<ImageCarouselProviderProps> = ({chi
                         isOpen={isOpen}
                         image={nextImage}
                         elevation={6}
+                        onClose={closePopup}
                         style={{
-                            marginLeft: '-50%',
-                            transform: 'rotate(-10deg) scale(0.7)',
+                            ...nextImageStyle,
+                            transform: 'rotate(10deg) scale(0.7)',
                         }}
                         onClick={() => {
                             setCurrentIndex(currentIndex + 1);
@@ -65,9 +108,10 @@ export const ImageCarouselProvider: React.FC<ImageCarouselProviderProps> = ({chi
                         isOpen={isOpen}
                         image={previousImage}
                         elevation={6}
+                        onClose={closePopup}
                         style={{
-                            marginLeft: '50%',
-                            transform: 'rotate(10deg) scale(0.7)',
+                            ...previousImageStyle,
+                            transform: 'rotate(-10deg) scale(0.7)',
                         }}
                         onClick={() => {
                             setCurrentIndex(currentIndex - 1);
@@ -80,6 +124,7 @@ export const ImageCarouselProvider: React.FC<ImageCarouselProviderProps> = ({chi
                         isOpen={isOpen}
                         image={currentImage}
                         elevation={12}
+                        onClose={closePopup}
                         style={{
                             pointerEvents: 'none',
                         }}
