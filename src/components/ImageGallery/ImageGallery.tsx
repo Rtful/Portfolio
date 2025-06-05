@@ -3,9 +3,9 @@ import ImageListItem from '@mui/material/ImageListItem';
 import {useTheme} from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
-import {useImageCarousel} from "../Popup/ImageCarouselProvider.tsx";
-import {useEffect} from "react";
-
+import {useEffect, useState} from "react";
+import {useImageCarousel} from "../ImageCarousel/UseImageCarousel.ts";
+import {Orientation} from "../../interfaces/Orientation.ts";
 
 function srcset(image: string, size: number, rows = 1, cols = 1) {
     return {
@@ -17,7 +17,8 @@ function srcset(image: string, size: number, rows = 1, cols = 1) {
 }
 
 export const ImageGallery = () => {
-    const {showPopup, setImage, setImagePaths, setCurrentIndex} = useImageCarousel();
+    const {showPopup, setImages, setCurrentIndex} = useImageCarousel();
+    const [test, setTest] = useState<ImageWithOrientation[]>([]);
 
     const theme = useTheme();
 
@@ -27,156 +28,161 @@ export const ImageGallery = () => {
     const isLg = useMediaQuery(theme.breakpoints.between('lg', 'xl'));
     const isXl = useMediaQuery(theme.breakpoints.up('xl'));
 
-    let cols = 2;
-    if (isXs) cols = 2;
-    else if (isSm) cols = 3;
-    else if (isMd) cols = 4;
-    else if (isLg) cols = 6;
-    else if (isXl) cols = 8;
+    let cols = 1;
+    if (isXs) cols = 1;
+    else if (isSm) cols = 2;
+    else if (isMd) cols = 3;
+    else if (isLg) cols = 4;
+    else if (isXl) cols = 5;
+
+
+    type ImageData = { path: string; name: string };
+    type ImageWithOrientation = ImageData & { orientation: Orientation };
 
     // const [currentIndex, setCurrentIndex] = React.useState(0);
 
-
     useEffect(() => {
-        setImagePaths(imagePaths);
-    });
+        async function classifyImageOrientations(images: ImageData[]): Promise<ImageWithOrientation[]> {
+            return Promise.all(images.map(img => {
+                return new Promise<ImageWithOrientation>((resolve) => {
+                    const image = new Image();
+                    image.onload = () => {
+                        let orientation: Orientation = 'square';
+                        if (image.naturalHeight > image.naturalWidth) {
+                            orientation = 'portrait';
+                        } else if (image.naturalWidth > image.naturalHeight) {
+                            orientation = 'landscape';
+                        }
+                        resolve({...img, orientation});
+                    };
+                    image.onerror = () => {
+                        // Fallback if image can't be loaded
+                        resolve({...img, orientation: 'landscape'});
+                    };
+                    image.src = img.path;
+                });
+            }));
+        }
+
+        classifyImageOrientations(itemData).then((calculatedImages) => {
+            setTest(calculatedImages);
+            setImages(calculatedImages);
+        });
+    }, [setImages, setTest]);
 
     return (
         <ImageList
             sx={{width: "100%", height: "auto"}}
             variant="quilted"
             cols={cols}
-            // rowHeight={121}
         >
-            {itemData.map((item, index) => (
-                <ImageListItem key={item.img} cols={item.cols || 1} rows={item.rows || 1}>
-                    <img
-                        {...srcset(item.img, 121, item.rows, item.cols)}
-                        alt={item.title}
-                        loading="lazy"
-                        onClick={() => {
-                            setImage(itemData[index].img);
-                            setCurrentIndex(index);
-                            console.log(index);
-                            showPopup();
-                        }}
-                    />
-                </ImageListItem>
-            ))}
+            {test.map((item, index) => {
+                const isPortrait = item.orientation === 'portrait';
+
+                let cols = 1;
+                let rows = 1;
+
+                if (item.orientation === 'portrait') {
+                    cols = 1;
+                    rows = 2;
+                } else if (item.orientation === 'landscape') {
+                    cols = 1;
+                    rows = 1;
+                }
+
+                return (
+                    <ImageListItem
+                        key={item.path}
+                        cols={cols || 1}
+                        rows={rows || 1}
+                        className={isPortrait ? 'portrait-item' : 'landscape-item'}
+                    >
+                        <img
+                            {...srcset(item.path, 121, rows, cols)}
+                            alt={item.name}
+                            loading="lazy"
+                            onClick={() => {
+                                // setImage(itemData[index].path);
+                                setCurrentIndex(index);
+                                showPopup();
+                            }}
+                        />
+                    </ImageListItem>
+                );
+            })}
         </ImageList>
     );
 }
 
 const itemData = [
     {
-        img: 'src/assets/img/nice_house_blue_sky.JPG',
-        title: 'Breakfast',
-        rows: 1,
-        cols: 2,
+        path: 'src/assets/img/nice_house_blue_sky.JPG',
+        name: 'A beautiful house in Kyoto'
     }, {
-        img: 'src/assets/img/white_flowers.JPG',
-        title: 'Breakfast',
-        rows: 2,
-        cols: 2,
+        path: 'src/assets/img/high.jpg',
+        name: 'Very high image'
     }, {
-        img: 'src/assets/img/gravestones.JPG',
-        title: 'Breakfast',
-        rows: 1,
-        cols: 2,
+        path: 'src/assets/img/wide.jpg',
+        name: 'Very wide image'
     }, {
-        img: 'src/assets/img/old_car.JPG',
-        title: 'Breakfast',
-        rows: 1,
-        cols: 2,
+        path: 'src/assets/img/white_flowers.JPG',
+        name: 'Breakfast'
     }, {
-        img: 'src/assets/img/0919961_0013.JPG',
-        title: 'Breakfast',
-        rows: 2,
-        cols: 2,
+        path: 'src/assets/img/temple.JPG',
+        name: 'Breakfast'
     }, {
-        img: 'src/assets/img/0919961_0014.JPG',
-        title: 'Breakfast',
-        rows: 2,
-        cols: 2,
+        path: 'src/assets/img/gravestones.JPG',
+        name: 'Gravestones in west Kyoto'
     }, {
-        img: 'src/assets/img/0919961_0019.JPG',
-        title: 'Breakfast',
-        rows: 2,
-        cols: 2,
+        path: 'src/assets/img/old_car.JPG',
+        name: 'Breakfast'
     }, {
-        img: 'src/assets/img/0919961_0023.JPG',
-        title: 'Breakfast',
-        rows: 2,
-        cols: 2,
+        path: 'src/assets/img/temple_green_leaves.JPG',
+        name: 'Temple in Ktoyo'
     }, {
-        img: 'src/assets/img/kyoto_yellow_boat.JPG',
-        title: 'Breakfast',
-        rows: 1,
-        cols: 2,
+        path: 'src/assets/img/kyoto_overview.JPG',
+        name: 'View of Kyoto'
     }, {
-        img: 'src/assets/img/0919961_0032.JPG',
-        title: 'Breakfast',
-        rows: 2,
-        cols: 2,
+        path: 'src/assets/img/kyoto_narrow_view.JPG',
+        name: 'Glimpse into Kyoto'
     }, {
-        img: 'src/assets/img/stone_lion.JPG',
-        title: 'Breakfast',
-        rows: 2,
-        cols: 2,
+        path: 'src/assets/img/kyoto_yellow_boat.JPG',
+        name: 'Boat in Kyoto'
     }, {
-        img: 'src/assets/img/IMG_3168.jpg',
-        title: 'Breakfast',
-        rows: 2,
-        cols: 2,
+        path: 'src/assets/img/bamboo_path.JPG',
+        name: 'Path through bamboo in Kyoto'
     }, {
-        img: 'src/assets/img/IMG_3223.jpg',
-        title: 'Breakfast',
-        rows: 2,
-        cols: 2,
+        path: 'src/assets/img/stone_lion.JPG',
+        name: 'Breakfast'
     }, {
-        img: 'src/assets/img/crab.jpg',
-        title: 'Breakfast',
-        rows: 2,
-        cols: 2,
+        path: 'src/assets/img/elevator_colombia.jpg',
+        name: 'Goods Elevator at el Piedra del Peñol'
     }, {
-        img: 'src/assets/img/colombian_flag.jpg',
-        title: 'Breakfast',
-        rows: 2,
-        cols: 2,
+        path: 'src/assets/img/piedra.jpg',
+        name: 'El Piedra del Peñol'
     }, {
-        img: 'src/assets/img/woman_umbrella_pink.jpg',
-        title: 'Breakfast',
-        rows: 2,
-        cols: 2,
+        path: 'src/assets/img/crab.jpg',
+        name: 'Breakfast'
     }, {
-        img: 'src/assets/img/rainbow_jellyfish.jpg',
-        title: 'Breakfast',
-        rows: 2,
-        cols: 2,
+        path: 'src/assets/img/colombian_flag.jpg',
+        name: 'Breakfast'
     }, {
-        img: 'src/assets/img/IMG_4665.jpg',
-        title: 'Breakfast',
-        rows: 2,
-        cols: 2,
+        path: 'src/assets/img/woman_umbrella_pink.jpg',
+        name: 'Breakfast'
     }, {
-        img: 'src/assets/img/penol_elevator.jpg',
-        title: 'Breakfast',
-        rows: 2,
-        cols: 2,
+        path: 'src/assets/img/rainbow_jellyfish.jpg',
+        name: 'Breakfast'
     }, {
-        img: 'src/assets/img/IMG_4669.jpg',
-        title: 'Breakfast',
-        rows: 2,
-        cols: 2,
+        path: 'src/assets/img/jellyfish_single.jpg',
+        name: 'A Jellyfish in the Tokyo Aquarium'
     }, {
-        img: 'src/assets/img/IMG_4706.jpg',
-        title: 'Breakfast',
-        rows: 2,
-        cols: 2,
+        path: 'src/assets/img/jellyfish_multiple_blue.jpg',
+        name: 'Many Blue Jellyfish'
+    }, {
+        path: 'src/assets/img/jellyfish_multiple.jpg',
+        name: 'Multiple Jellyfish'
+    }, {
+        path: 'src/assets/img/thousand_torii.jpg',
+        name: '"Thousand Gates" - Kyoto'
     }
 ];
-
-// The image paths without anything else
-const imagePaths = itemData.map(item => item.img);
-
-

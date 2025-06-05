@@ -1,6 +1,6 @@
 import './App.css'
 import {ImageGallery} from "./components/ImageGallery/ImageGallery.tsx";
-import {ImageCarouselProvider} from "./components/Popup/ImageCarouselProvider.tsx";
+import {ImageCarouselProvider} from "./components/ImageCarousel/ImageCarouselProvider.tsx";
 
 function App() {
 
