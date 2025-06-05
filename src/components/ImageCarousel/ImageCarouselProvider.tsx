@@ -62,11 +62,9 @@ export const ImageCarouselProvider: React.FC<ImageCarouselProviderProps> = ({chi
     const nextImage = images[currentIndex + 1];
 
     const previousImageStyle: React.CSSProperties = {
-        border: '10px solid blue',
         transform: 'rotate(-10deg) scale(0.7)',
     };
     const nextImageStyle: React.CSSProperties = {
-        border: '10px solid red',
         transform: 'rotate(10deg) scale(0.7)',
     };
 
@@ -90,12 +88,10 @@ export const ImageCarouselProvider: React.FC<ImageCarouselProviderProps> = ({chi
                     <Polaroid
                         isOpen={isOpen}
                         image={currentImage}
-                        elevation={12}
                         onClose={closePopup}
                         style={{
                             pointerEvents: 'none',
                         }}
-                        noBackdrop={true}
                         raiseAbove={true}
                     />
                 )}
@@ -103,26 +99,22 @@ export const ImageCarouselProvider: React.FC<ImageCarouselProviderProps> = ({chi
                     <Polaroid
                         isOpen={isOpen}
                         image={nextImage}
-                        elevation={6}
                         onClose={closePopup}
                         style={nextImageStyle}
                         onClick={() => {
                             setCurrentIndex(currentIndex + 1);
                         }}
-                        noBackdrop={true}
                     />
                 )}
                 {previousImage && (
                     <Polaroid
                         isOpen={isOpen}
                         image={previousImage}
-                        elevation={6}
                         onClose={closePopup}
                         style={previousImageStyle}
                         onClick={() => {
                             setCurrentIndex(currentIndex - 1);
                         }}
-                        noBackdrop={true}
                     />
                 )}
             </>
