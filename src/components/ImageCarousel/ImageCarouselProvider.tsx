@@ -63,18 +63,17 @@ export const ImageCarouselProvider: React.FC<ImageCarouselProviderProps> = ({chi
 
     const previousImageStyle: React.CSSProperties = {
         border: '10px solid blue',
+        transform: 'rotate(-10deg) scale(0.7)',
     };
     const nextImageStyle: React.CSSProperties = {
         border: '10px solid red',
+        transform: 'rotate(10deg) scale(0.7)',
     };
 
-    if (currentImage?.orientation === 'portrait') {
-        previousImageStyle.marginLeft = '-50%';
-        nextImageStyle.marginRight = '-50%';
-    } else {
-        previousImageStyle.marginTop = '-50%';
-        nextImageStyle.marginBottom = '-50%';
-    }
+    previousImageStyle.marginLeft = '-75%';
+    nextImageStyle.marginRight = '-75%';
+    previousImageStyle.marginBottom = '-10%';
+    nextImageStyle.marginTop = '-10%';
 
     return (
         <ImageCarouselContext.Provider value={{showPopup, setImages, setCurrentIndex, images}}>
@@ -87,16 +86,26 @@ export const ImageCarouselProvider: React.FC<ImageCarouselProviderProps> = ({chi
                     onKeyDown={(e) => e.stopPropagation()}
                 />
 
+                {currentImage && (
+                    <Polaroid
+                        isOpen={isOpen}
+                        image={currentImage}
+                        elevation={12}
+                        onClose={closePopup}
+                        style={{
+                            pointerEvents: 'none',
+                        }}
+                        noBackdrop={true}
+                        raiseAbove={true}
+                    />
+                )}
                 {nextImage && (
                     <Polaroid
                         isOpen={isOpen}
                         image={nextImage}
                         elevation={6}
                         onClose={closePopup}
-                        style={{
-                            ...nextImageStyle,
-                            transform: 'rotate(10deg) scale(0.7)',
-                        }}
+                        style={nextImageStyle}
                         onClick={() => {
                             setCurrentIndex(currentIndex + 1);
                         }}
@@ -109,24 +118,9 @@ export const ImageCarouselProvider: React.FC<ImageCarouselProviderProps> = ({chi
                         image={previousImage}
                         elevation={6}
                         onClose={closePopup}
-                        style={{
-                            ...previousImageStyle,
-                            transform: 'rotate(-10deg) scale(0.7)',
-                        }}
+                        style={previousImageStyle}
                         onClick={() => {
                             setCurrentIndex(currentIndex - 1);
-                        }}
-                        noBackdrop={true}
-                    />
-                )}
-                {currentImage && (
-                    <Polaroid
-                        isOpen={isOpen}
-                        image={currentImage}
-                        elevation={12}
-                        onClose={closePopup}
-                        style={{
-                            pointerEvents: 'none',
                         }}
                         noBackdrop={true}
                     />
