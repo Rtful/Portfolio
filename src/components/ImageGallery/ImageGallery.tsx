@@ -5,7 +5,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 
 import {useEffect} from "react";
 import {useImageCarousel} from "../ImageCarousel/UseImageCarousel.ts";
-import {Orientation} from "../../interfaces/Orientation.ts";
+import {Orientation} from "@mui/material";
 import {ImageWithOrientation} from "../../interfaces/ImageWithOrientation.ts";
 
 export const ImageGallery = () => {
@@ -29,28 +29,32 @@ export const ImageGallery = () => {
     type ImageData = { path: string; name: string };
 
     useEffect(() => {
+        const imagesFromFS = import.meta.glob('/src/assets/img/*.(png|jpg|jpeg|svg|gif|webp)');
+        const imageObject: { path: string; name: string }[] = Object.keys(imagesFromFS).map((path) => {
+            const parts = path.split('/');
+            const fileName = parts[parts.length - 1];
+            const nameWithoutExtension = fileName.replace(/\.[^/.]+$/, '');
+            return { path, name: nameWithoutExtension };
+        });
+
         async function classifyImageOrientations(images: ImageData[]): Promise<ImageWithOrientation[]> {
             return Promise.all(images.map(img => {
                 return new Promise<ImageWithOrientation>((resolve) => {
                     const image = new Image();
                     image.onload = () => {
-                        let orientation: Orientation = 'square';
-                        if (image.naturalHeight > image.naturalWidth) {
-                            orientation = 'portrait';
-                        } else if (image.naturalWidth > image.naturalHeight) {
-                            orientation = 'landscape';
-                        }
-                        resolve({...img, orientation});
+                        const orientation: Orientation = image.naturalHeight < image.naturalWidth ? 'horizontal' : 'vertical';
+                        const aspectRatio = image.naturalWidth / image.naturalHeight;
+                        resolve({...img, orientation, aspectRatio});
                     };
                     image.onerror = () => {
-                        resolve({...img, orientation: 'landscape'});
+                        resolve({...img, orientation: 'horizontal', aspectRatio: 1});
                     };
                     image.src = img.path;
                 });
             }));
         }
 
-        classifyImageOrientations(itemData).then((calculatedImages) => {
+        classifyImageOrientations(imageObject).then((calculatedImages) => {
             setImages(calculatedImages);
         });
     }, [setImages]);
@@ -78,76 +82,3 @@ export const ImageGallery = () => {
         </ImageList>
     );
 }
-
-const itemData = [
-    {
-        path: 'src/assets/img/nice_house_blue_sky.JPG',
-        name: 'A beautiful house in Kyoto'
-    }, {
-        path: 'src/assets/img/square.jpg',
-        name: 'A square image'
-    }, {
-        path: 'src/assets/img/gravestones.JPG',
-        name: 'Gravestones in west Kyoto'
-    }, {
-        path: 'src/assets/img/white_flowers.JPG',
-        name: 'Breakfast'
-    }, {
-        path: 'src/assets/img/temple.JPG',
-        name: 'Breakfast'
-    }, {
-        path: 'src/assets/img/gravestones.JPG',
-        name: 'Gravestones in west Kyoto'
-    }, {
-        path: 'src/assets/img/old_car.JPG',
-        name: 'Breakfast'
-    }, {
-        path: 'src/assets/img/temple_green_leaves.JPG',
-        name: 'Temple in Ktoyo'
-    }, {
-        path: 'src/assets/img/kyoto_overview.JPG',
-        name: 'View of Kyoto'
-    }, {
-        path: 'src/assets/img/kyoto_narrow_view.JPG',
-        name: 'Glimpse into Kyoto'
-    }, {
-        path: 'src/assets/img/kyoto_yellow_boat.JPG',
-        name: 'Boat in Kyoto'
-    }, {
-        path: 'src/assets/img/bamboo_path.JPG',
-        name: 'Path through bamboo in Kyoto'
-    }, {
-        path: 'src/assets/img/stone_lion.JPG',
-        name: 'Breakfast'
-    }, {
-        path: 'src/assets/img/elevator_colombia.jpg',
-        name: 'Goods Elevator at el Piedra del Peñol'
-    }, {
-        path: 'src/assets/img/piedra.jpg',
-        name: 'El Piedra del Peñol'
-    }, {
-        path: 'src/assets/img/crab.jpg',
-        name: 'Breakfast'
-    }, {
-        path: 'src/assets/img/colombian_flag.jpg',
-        name: 'Breakfast'
-    }, {
-        path: 'src/assets/img/woman_umbrella_pink.jpg',
-        name: 'Breakfast'
-    }, {
-        path: 'src/assets/img/rainbow_jellyfish.jpg',
-        name: 'Breakfast'
-    }, {
-        path: 'src/assets/img/jellyfish_single.jpg',
-        name: 'A Jellyfish in the Tokyo Aquarium'
-    }, {
-        path: 'src/assets/img/jellyfish_multiple_blue.jpg',
-        name: 'Many Blue Jellyfish'
-    }, {
-        path: 'src/assets/img/jellyfish_multiple.jpg',
-        name: 'Multiple Jellyfish'
-    }, {
-        path: 'src/assets/img/thousand_torii.jpg',
-        name: '"Thousand Gates" - Kyoto'
-    }
-];

@@ -1,7 +1,22 @@
+import useMediaQuery from "@mui/material/useMediaQuery";
+
+let fontLoaded = false;
+
+function ensurePermanentMarkerFontLoaded() {
+    if (fontLoaded) return;
+
+    const link = document.createElement('link');
+    link.href = 'https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+
+    fontLoaded = true;
+}
 import './Polaroid.css';
 import Dialog from "@mui/material/Dialog";
 import React from "react";
 import {ImageWithOrientation} from "../../interfaces/ImageWithOrientation.ts";
+import {useTheme} from "@mui/material/styles";
 
 type PolaroidProps = {
     isOpen?: boolean;
@@ -22,6 +37,13 @@ export const Polaroid: React.FC<PolaroidProps> = ({
                                                       },
                                                       raiseAbove = false,
                                                   }) => {
+    const theme = useTheme();
+
+    React.useEffect(() => {
+        ensurePermanentMarkerFontLoaded();
+    }, []);
+
+    const isMdUp = useMediaQuery(theme.breakpoints.up('md')); // true if ≥900px
 
     const paperProps = {
         backdrop: {
@@ -30,8 +52,9 @@ export const Polaroid: React.FC<PolaroidProps> = ({
         paper: {
             elevation: raiseAbove ? 24 : 6,
             sx: {
+                // Default height (for square images)
+                height: isMdUp ? '80%' : 'unset',
                 ...style,
-                height: image.orientation === 'landscape' ? 'unset' : '100%',
                 zIndex: raiseAbove ? 1500 : 1300,
                 margin: raiseAbove ? '10%' : 'none',
             }
@@ -41,6 +64,14 @@ export const Polaroid: React.FC<PolaroidProps> = ({
                 zIndex: raiseAbove ? 1500 : 1300,
             }
         }
+    }
+
+    if (image.aspectRatio > 1) {
+        // Landscape
+        paperProps.paper.sx.height = 'unset';
+    } else if (image.aspectRatio < 1) {
+        // Portrait
+        paperProps.paper.sx.height = '80%';
     }
 
 

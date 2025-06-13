@@ -1,5 +1,8 @@
+import {Orientation} from "@mui/material";
+
 export interface ImageWithOrientation {
     path: string;
     name: string;
-    orientation: string;
+    aspectRatio: number;
+    orientation: Orientation;
 }

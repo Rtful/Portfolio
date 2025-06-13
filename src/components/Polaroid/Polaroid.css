@@ -9,7 +9,7 @@
 
 .modal-content {
     max-width: calc(100% - 2 * var(--white-border));
-    max-height: calc(100% - 2 * var(--white-border));
+    max-height: calc(100% - var(--text-margin) / 2 - var(--white-border));
     display: flex;
     flex-direction: column;
     margin-bottom: calc(var(--text-margin) / 2);
