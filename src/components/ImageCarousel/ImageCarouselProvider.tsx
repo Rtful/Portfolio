@@ -31,6 +31,7 @@ export const ImageCarouselProvider: React.FC<ImageCarouselProviderProps> = ({chi
 
     const showPopup = () => {
         setIsOpen(true);
+        document.body.classList.add("no-scroll");
     };
 
     const closePopup = () => {
@@ -40,6 +41,7 @@ export const ImageCarouselProvider: React.FC<ImageCarouselProviderProps> = ({chi
         if (el instanceof HTMLElement) {
             el.focus();
         }
+        document.body.classList.remove("no-scroll");
     };
 
     useEffect(() => {

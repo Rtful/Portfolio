@@ -2,10 +2,10 @@ import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import {useTheme} from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import './ImageGallery.css';
 
 import {useEffect} from "react";
 import {useImageCarousel} from "../ImageCarousel/UseImageCarousel.ts";
-import {Orientation} from "@mui/material";
 import {ImageWithOrientation} from "../../interfaces/ImageWithOrientation.ts";
 
 export const ImageGallery = () => {
@@ -34,7 +34,7 @@ export const ImageGallery = () => {
             const parts = path.split('/');
             const fileName = parts[parts.length - 1];
             const nameWithoutExtension = fileName.replace(/\.[^/.]+$/, '');
-            return { path, name: nameWithoutExtension };
+            return {path, name: nameWithoutExtension};
         });
 
         async function classifyImageOrientations(images: ImageData[]): Promise<ImageWithOrientation[]> {
@@ -42,12 +42,11 @@ export const ImageGallery = () => {
                 return new Promise<ImageWithOrientation>((resolve) => {
                     const image = new Image();
                     image.onload = () => {
-                        const orientation: Orientation = image.naturalHeight < image.naturalWidth ? 'horizontal' : 'vertical';
                         const aspectRatio = image.naturalWidth / image.naturalHeight;
-                        resolve({...img, orientation, aspectRatio});
+                        resolve({...img, aspectRatio});
                     };
                     image.onerror = () => {
-                        resolve({...img, orientation: 'horizontal', aspectRatio: 1});
+                        resolve({...img, aspectRatio: 1});
                     };
                     image.src = img.path;
                 });
@@ -64,6 +63,7 @@ export const ImageGallery = () => {
             sx={{width: "100%", height: "auto"}}
             variant="masonry"
             cols={cols}
+            gap={8}
         >
             {images.map((item, index) => (
                 <ImageListItem key={item.path}>
