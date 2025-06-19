@@ -71,7 +71,7 @@ export const ImageCarouselProvider: React.FC<ImageCarouselProviderProps> = ({chi
         transform: `rotate(10deg) scale(${backgroundPolaroidScale})`,
     };
 
-    const defaultMarginPercentage = isXl ? 60 : 80;
+    const defaultMarginPercentage = isXl ? 50 : 80;
     const currAspectRatio = images[currentIndex]?.aspectRatio;
     const currImgMarginHorizontal = currAspectRatio > 1
         ? defaultMarginPercentage
