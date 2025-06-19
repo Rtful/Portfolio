@@ -1,5 +1,6 @@
 import { AppBar, Toolbar, Typography, Box, Button } from '@mui/material';
 import { NavLink } from 'react-router-dom';
+import {ThemeButton} from "../Button/ThemeButton.tsx";
 
 const navItems = [
     { label: 'Gallery', to: '/gallery' },
@@ -32,7 +33,8 @@ export default function Navbar() {
                         >
                             {item.label}
                         </Button>
-                    ))}
+                    ))} 
+                    <ThemeButton/>
                 </Box>
             </Toolbar>
         </AppBar>

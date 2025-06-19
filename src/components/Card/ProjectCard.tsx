@@ -30,7 +30,6 @@ export const ProjectCard: FC<ProjectCardProps> = ({ project, children }) => {
 			axios
 				.get(`https://api.github.com/repos/${project.url}/languages`)
 				.then((res) => {
-					console.log(res.data)
 					setProjectData(res.data);
 				});
 		}
