@@ -1,6 +1,6 @@
 // Original component by Pandouby
 // Adapted with permission for use in my portfolio
-// Source: https://github.com/Pandouby/pandouby.github.io
+// Source: Pandouby/pandouby.github.io
 import { FaJava, FaLinkedin } from "react-icons/fa";
 import {
 	SiDocker,
@@ -81,21 +81,27 @@ export const configData: ConfigData = {
 	projects: [
 		{
 			title: "Portfolio Website",
-			url: "pandouby/pandouby.github.io",
+			url: "rtful/portfolio",
 			description: "My Portfolio Website to display my Skills and Projects",
 			hasGithub: true,
 		},
 		{
-			title: "Visited",
-			url: "pandouby/Visited",
-			description: "A React Native based application whitch allows you to select your visited countries on a 3D renderd globe",
+			title: "Cad Models",
+			url: "Rtful/CadModels",
+			description: "Cad Models made by me. Limited to CAD that uses text based file formats",
 			hasGithub: true,
 		},
 		{
-			title: "Flow-Fields",
-			url: "Pandouby/flow-field",
-			description: "A small project to get into perlin noise based flow-field simulations",
+			title: "Pico LCD",
+			url: "Rtful/picoLCD",
+			description: "Program for the Raspberry Pi Pico that allows it to write text to an LCD screen",
 			hasGithub: true,
+		},
+		{
+			title: "Spotify Keychains Generator",
+			url: "Rtful/SpotifyKeyChainGenerator",
+			description: "Generates STL file of a Spotify keychain using Blender",
+			hasGithub: false,
 		},
 		{
 			title: "Spotify Keychain",
@@ -124,12 +130,12 @@ export const configData: ConfigData = {
 		{
 			name: "LinkedIn",
 			icon: <FaLinkedin />,
-			url: "https://www.linkedin.com/in/silvan-dubach-9247aa267/",
+			url: "https://www.linkedin.com/in/aaronholenstein/",
 		},
 		{
 			name: "GitHub",
 			icon: <SiGithub />,
-			url: "https://www.github.com/pandouby",
+			url: "https://www.github.com/rtful",
 		},
 	],
 };
