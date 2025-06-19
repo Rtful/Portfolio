@@ -1,0 +1,82 @@
+// Original component by Pandouby
+// Adapted with permission for use in my portfolio
+// Source: https://github.com/Pandouby/pandouby.github.io
+@import "/src/styles/theme-variables.scss";
+
+.theme-button {
+	z-index: 200;
+	position: fixed;
+	right: 20px;
+	top: 20px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 0;
+	padding: 0;
+	border: none;
+	height: 50px;
+	width: 50px;
+	border-radius: 50%;
+	@include themify($themes) {
+		background-color: themed("primaryColor");
+		color: themed("textColor");
+	}
+}
+
+.theme-button .theme-icon {
+	scale: 200%;
+}
+
+.theme-button:hover {
+	transition: 0.2s;
+	@include themify($themes) {
+		box-shadow: 5px 5px 5px themed("boxShadowColor");
+	}
+}
+
+.button {
+	width: 100%;
+	height: 2rem;
+	text-transform: uppercase;
+	font-weight: 700;
+	font-size: 10px;
+	border: none;
+	border-radius: 0.6rem;
+	@include themify($themes) {
+		background-color: themed("backgroundColor");
+		color: themed("textColor");
+	}
+}
+
+.button:hover {
+	transition: 0.2s;
+	@include themify($themes) {
+		box-shadow: 5px 5px 5px themed("boxShadowColor");
+	}
+}
+
+.linkButton {
+	display: flex;
+	width: 100%;
+	height: 2rem;
+	text-transform: uppercase;
+	font-weight: 700;
+	font-size: 10px;
+	border: none;
+	border-radius: 0.6rem;
+	text-align: center;
+	align-items: center;
+	justify-content: center;
+	@include themify($themes) {
+		color: themed("primaryColor");
+		background-color: themed("secondaryColor");
+	}
+	margin: 0.2rem;
+}
+
+.linkButton:hover {
+	transition: 0.2s;
+	@include themify($themes) {
+		box-shadow: 5px 5px 5px themed("boxShadowColor");
+	}
+}

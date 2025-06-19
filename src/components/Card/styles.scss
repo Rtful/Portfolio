@@ -1,0 +1,103 @@
+// Original component by Pandouby
+// Adapted with permission for use in my portfolio
+// Source: https://github.com/Pandouby/pandouby.github.io
+@import "/src/styles/theme-variables.scss";
+
+.card-wrapper {
+	position: relative;
+	width: 420px;
+	height: 420px;
+	transition: width 0.3s, height 0.3s;
+}
+
+.card {
+	position: absolute;
+	border-radius: 2rem;
+	height: 100%;
+	width: 100%;
+	max-width: 100%;
+	max-height: 100%;
+}
+
+.card-wrapper .card-front {
+	z-index: 50;
+	height: 100%;
+	width: 100%;
+	@include themify($themes) {
+		background-color: themed("primaryColor");
+	}
+	@include themify($themes) {
+		box-shadow: 5px 5px 5px themed("boxShadowColor");
+	}
+}
+
+.card-wrapper .card-back {
+	z-index: 49;
+	@include themify($themes) {
+		background-color: themed("secondaryColor");
+		//background: linear-gradient(0deg, themed('secondaryColor') 0%, rgb(242, 88, 119) 100%);
+		box-shadow: 5px 5px 5px themed("boxShadowColor");
+	}
+
+	transform-origin: bottom left;
+	transform: rotate(5deg) translateY(-20px);
+}
+
+.card-title {
+	@include themify($themes) {
+		color: themed("textColor");
+	}
+	text-align: center;
+	margin: 0;
+}
+
+.card-content {
+	@include themify($themes) {
+		color: themed("textColor");
+	}
+	height: 85%;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	padding: 2rem;
+}
+
+.card-wrapper[data-isopen="true"] {
+	height: 800px;
+	z-index: 100;
+}
+
+.projectCard {
+	margin: 3rem 0 3rem 0;
+
+	.card-wrapper {
+		height: 300px;
+	}
+}
+
+.card footer {
+	display: flex;
+	width: 80%;
+	position: absolute;
+	bottom: 0;
+	padding: 0 2rem 2rem 2rem;
+}
+
+footer .button-more {
+	width: 80%;
+	margin: 0.2rem;
+}
+footer .button-github {
+	width: 20%;
+	margin: 0.2rem;
+
+	svg {
+		scale: 150%;
+	}
+}
+
+@media only screen and (max-width: 768px) {
+	.card-wrapper {
+		width: 100%;
+	}
+}
