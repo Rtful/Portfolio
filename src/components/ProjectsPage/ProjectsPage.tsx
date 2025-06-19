@@ -6,7 +6,7 @@ export const ProjectsPage = () => {
     const projects: Project[] = configData.projects;
     return (
         <>
-            <h1>THIS IS PROJECTS</h1>
+            <h1>Projects</h1>
             <div className="projects-wrapper">
                 {projects.map((project, key) => {
                     return (

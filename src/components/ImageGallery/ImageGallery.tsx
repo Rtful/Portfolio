@@ -59,26 +59,29 @@ export const ImageGallery = () => {
     }, [setImages]);
 
     return (
-        <ImageList
-            sx={{width: "100%", height: "auto"}}
-            variant="masonry"
-            cols={cols}
-            gap={8}
-        >
-            {images.map((item, index) => (
-                <ImageListItem key={item.path}>
-                    <img
-                        src={item.path}
-                        alt={item.name}
-                        loading="lazy"
-                        tabIndex={index}
-                        onClick={() => {
-                            setCurrentIndex(index);
-                            showPopup();
-                        }}
-                    />
-                </ImageListItem>
-            ))}
-        </ImageList>
+        <>
+            <h1>Gallery</h1>
+            <ImageList
+                sx={{width: "100%", height: "auto"}}
+                variant="masonry"
+                cols={cols}
+                gap={8}
+            >
+                {images.map((item, index) => (
+                    <ImageListItem key={item.path}>
+                        <img
+                            src={item.path}
+                            alt={item.name}
+                            loading="lazy"
+                            tabIndex={index}
+                            onClick={() => {
+                                setCurrentIndex(index);
+                                showPopup();
+                            }}
+                        />
+                    </ImageListItem>
+                ))}
+            </ImageList>
+        </>
     );
 }
