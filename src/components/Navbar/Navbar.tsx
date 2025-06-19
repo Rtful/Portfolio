@@ -1,31 +1,40 @@
+import { AppBar, Toolbar, Typography, Box, Button } from '@mui/material';
 import { NavLink } from 'react-router-dom';
-import './Navbar.css'; // optional: for cleaner separation of styles
+
+const navItems = [
+    { label: 'Gallery', to: '/gallery' },
+    { label: 'Projects', to: '/projects' },
+    { label: '3D-Models', to: '/3d' },
+    { label: 'About Me', to: '/about-me' },
+];
 
 export default function Navbar() {
     return (
-        <nav className="navbar">
-            <ul>
-                <li>
-                    <NavLink to="/gallery" className={({ isActive }) => isActive ? 'active' : ''}>
-                        Gallery
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink to="/projects" className={({ isActive }) => isActive ? 'active' : ''}>
-                        Projects
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink to="/about-me" className={({ isActive }) => isActive ? 'active' : ''}>
-                        About Me
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink to="/3d" className={({ isActive }) => isActive ? 'active' : ''}>
-                        3D
-                    </NavLink>
-                </li>
-            </ul>
-        </nav>
+        <AppBar position="sticky" color="default" elevation={1}>
+            <Toolbar>
+                <Typography variant="h6" sx={{ flexGrow: 1 }}>
+                    Aaron Holenstein
+                </Typography>
+                <Box sx={{ display: 'flex', gap: 2 }}>
+                    {navItems.map((item) => (
+                        <Button
+                            key={item.to}
+                            component={NavLink}
+                            to={item.to}
+                            sx={{
+                                color: 'text.primary',
+                                textTransform: 'none',
+                                '&.active': {
+                                    borderBottom: '2px solid',
+                                    borderColor: 'primary.main',
+                                },
+                            }}
+                        >
+                            {item.label}
+                        </Button>
+                    ))}
+                </Box>
+            </Toolbar>
+        </AppBar>
     );
 }
