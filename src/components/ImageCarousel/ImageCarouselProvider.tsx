@@ -27,7 +27,8 @@ export const ImageCarouselProvider: React.FC<ImageCarouselProviderProps> = ({chi
     const [currentIndex, setCurrentIndex] = useState(0);
 
     const theme = useTheme();
-    const isPhone = useMediaQuery(theme.breakpoints.down("sm"));
+    const isSm = useMediaQuery(theme.breakpoints.down("sm"));
+    const isXl = useMediaQuery(theme.breakpoints.up("xl"));
 
     const showPopup = () => {
         setIsOpen(true);
@@ -70,17 +71,17 @@ export const ImageCarouselProvider: React.FC<ImageCarouselProviderProps> = ({chi
         transform: `rotate(10deg) scale(${backgroundPolaroidScale})`,
     };
 
-
+    const defaultMarginPercentage = isXl ? 60 : 80;
     const currAspectRatio = images[currentIndex]?.aspectRatio;
     const currImgMarginHorizontal = currAspectRatio > 1
-        ? 80
-        : (currAspectRatio * 80);
+        ? defaultMarginPercentage
+        : (currAspectRatio * defaultMarginPercentage);
 
     const currImgMarginVertical = currAspectRatio > 1
-        ? (80 / currAspectRatio) / backgroundPolaroidScale
-        : 80 / backgroundPolaroidScale;
+        ? (defaultMarginPercentage / currAspectRatio) / backgroundPolaroidScale
+        : defaultMarginPercentage / backgroundPolaroidScale;
 
-    if (isPhone) {
+    if (isSm) {
         nextImageStyle.marginBottom = `-${currImgMarginVertical}%`;
         previousImageStyle.marginTop = `-${currImgMarginVertical}%`;
     } else {
