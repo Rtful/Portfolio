@@ -28,6 +28,7 @@ body {
   place-items: center;
   min-width: 320px;
   height: 100vh;
+  overflow: hidden;
 }
 
 h1 {
@@ -44,3 +45,8 @@ h1 {
     color: #747bff;
   }
 }
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
