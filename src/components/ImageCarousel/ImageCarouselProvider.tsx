@@ -28,8 +28,7 @@ export const ImageCarouselProvider: React.FC<ImageCarouselProviderProps> = ({chi
 
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down("sm"));
-    const isXl = useMediaQuery(theme.breakpoints.up("xl"));
-
+    useMediaQuery(theme.breakpoints.up("xl"));
     const showPopup = () => {
         setIsOpen(true);
         document.body.classList.add("no-scroll");
@@ -71,7 +70,7 @@ export const ImageCarouselProvider: React.FC<ImageCarouselProviderProps> = ({chi
         transform: `rotate(10deg) scale(${backgroundPolaroidScale})`,
     };
 
-    const defaultMarginPercentage = isXl ? 50 : 80;
+    const defaultMarginPercentage =  80;
     const currAspectRatio = images[currentIndex]?.aspectRatio;
     const currImgMarginHorizontal = currAspectRatio > 1
         ? defaultMarginPercentage

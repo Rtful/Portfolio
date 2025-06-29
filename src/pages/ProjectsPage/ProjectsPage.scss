@@ -1,0 +1,26 @@
+.projects-wrapper {
+  display: flex;
+  gap: 4rem;
+  justify-content: center;
+}
+
+//.card-wrapper {
+//  height: 18rem !important;
+//  width: 24rem !important;
+//  max-width: 100%;
+//}
+
+.projects-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+//
+//@media (max-width: 500px) {
+//  .card {
+//    padding: 1rem;
+//    .card-content {
+//      padding: 2rem 0;
+//    }
+//  }
+//}

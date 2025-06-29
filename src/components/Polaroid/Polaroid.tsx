@@ -1,4 +1,10 @@
 import useMediaQuery from "@mui/material/useMediaQuery";
+import './Polaroid.css';
+import Dialog from "@mui/material/Dialog";
+import React from "react";
+import {ImageWithOrientation} from "../../interfaces/ImageWithOrientation.ts";
+import {useTheme, createAppTheme} from "../../theme/theme.ts";
+
 
 let fontLoaded = false;
 
@@ -12,11 +18,7 @@ function ensurePermanentMarkerFontLoaded() {
 
     fontLoaded = true;
 }
-import './Polaroid.css';
-import Dialog from "@mui/material/Dialog";
-import React from "react";
-import {ImageWithOrientation} from "../../interfaces/ImageWithOrientation.ts";
-import {useTheme} from "@mui/material/styles";
+
 
 type PolaroidProps = {
     isOpen?: boolean;
@@ -37,13 +39,14 @@ export const Polaroid: React.FC<PolaroidProps> = ({
                                                       },
                                                       raiseAbove = false,
                                                   }) => {
-    const theme = useTheme();
+    const {theme: currentTheme} = useTheme();
+    const muiTheme = createAppTheme(currentTheme);
 
     React.useEffect(() => {
         ensurePermanentMarkerFontLoaded();
     }, []);
 
-    const isMdUp = useMediaQuery(theme.breakpoints.up('md')); // true if ≥900px
+    const isMdUp = useMediaQuery(muiTheme.breakpoints.up('md')); // true if ≥900px
 
     const paperProps = {
         backdrop: {
@@ -87,6 +90,7 @@ export const Polaroid: React.FC<PolaroidProps> = ({
         <div
             className="polaroid"
             onClick={onClick}
+            style={{backgroundColor: muiTheme.palette.primary.main}}
         >
             <div className="modal-content">
                 <img

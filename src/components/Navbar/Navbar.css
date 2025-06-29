@@ -1,4 +1,0 @@
-#main {
-    height: calc(100vh - 64px); /* MUI AppBar default height */
-    overflow-y: auto;
-}

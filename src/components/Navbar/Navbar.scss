@@ -1,0 +1,28 @@
+@use "../../styles/theme-variables.scss" as theme;
+
+.nav-drawer-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &.open {
+    padding: 0;
+  }
+
+  li {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+
+  &.open li {
+    animation: slideInUp 0.3s cubic-bezier(0.785, 0.135, 0.15, 0.86) forwards;
+    animation-delay: var(--delay);
+  }
+}
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

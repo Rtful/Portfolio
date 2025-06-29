@@ -1,3 +1,5 @@
+@use "styles/theme-variables.scss" as theme;
+
 #root {
   height: 100%;
   width: 100%;
@@ -9,6 +11,11 @@
   text-align: center;
   height: calc(100% - 4rem);
   overflow-y: auto;
+  overflow-x: hidden;
+  @include theme.themify(theme.$themes) {
+    background-color: theme.themed("backgroundColor");
+    color: theme.themed("textColor");
+  }
 }
 
 .logo {

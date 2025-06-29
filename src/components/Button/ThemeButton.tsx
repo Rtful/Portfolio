@@ -1,14 +1,14 @@
 // Original component by Pandouby
 // Adapted with permission for use in my portfolio
 // Source: https://github.com/Pandouby/pandouby.github.io
-import { FC, useContext } from "react";
-import { ThemeContext } from "../../contexts/theme-context";
+import { FC } from "react";
+import { useTheme } from "../../theme/theme";
 import "./styles.scss";
 import { MdLightMode, MdOutlineDarkMode } from "react-icons/md";
 import { motion } from "framer-motion";
 
 export const ThemeButton: FC = () => {
-	const { theme, setTheme } = useContext(ThemeContext);
+	const { theme, setTheme } = useTheme();
 
 	const handleThemeChange = () => {
 		const isCurrentDark = theme === "dark";

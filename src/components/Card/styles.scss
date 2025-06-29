@@ -1,12 +1,13 @@
 // Original component by Pandouby
 // Adapted with permission for use in my portfolio
 // Source: https://github.com/Pandouby/pandouby.github.io
-@import "/src/styles/theme-variables.scss";
+@use "../../styles/theme-variables.scss" as theme;
 
 .card-wrapper {
 	position: relative;
-	width: 420px;
-	height: 420px;
+	height: 16rem;
+	width: 24rem;
+	max-width: 100%;
 	transition: width 0.3s, height 0.3s;
 }
 
@@ -23,20 +24,20 @@
 	z-index: 50;
 	height: 100%;
 	width: 100%;
-	@include themify($themes) {
-		background-color: themed("primaryColor");
+	@include theme.themify(theme.$themes) {
+		background-color: theme.themed("primaryColor");
 	}
-	@include themify($themes) {
-		box-shadow: 5px 5px 5px themed("boxShadowColor");
+	@include theme.themify(theme.$themes) {
+		box-shadow: 5px 5px 5px theme.themed("boxShadowColor");
 	}
 }
 
 .card-wrapper .card-back {
 	z-index: 49;
-	@include themify($themes) {
-		background-color: themed("secondaryColor");
+	@include theme.themify(theme.$themes) {
+		background-color: theme.themed("secondaryColor");
 		//background: linear-gradient(0deg, themed('secondaryColor') 0%, rgb(242, 88, 119) 100%);
-		box-shadow: 5px 5px 5px themed("boxShadowColor");
+		box-shadow: 5px 5px 5px theme.themed("boxShadowColor");
 	}
 
 	transform-origin: bottom left;
@@ -44,35 +45,30 @@
 }
 
 .card-title {
-	@include themify($themes) {
-		color: themed("textColor");
+	@include theme.themify(theme.$themes) {
+		color: theme.themed("textColor");
 	}
 	text-align: center;
 	margin: 0;
 }
 
 .card-content {
-	@include themify($themes) {
-		color: themed("textColor");
+	@include theme.themify(theme.$themes) {
+		color: theme.themed("textColor");
 	}
 	height: 85%;
 	display: flex;
 	align-items: center;
 	flex-direction: column;
-	padding: 2rem;
 }
 
 .card-wrapper[data-isopen="true"] {
-	height: 800px;
+	height: 34rem;
 	z-index: 100;
 }
 
 .projectCard {
 	margin: 3rem 0 3rem 0;
-
-	.card-wrapper {
-		height: 300px;
-	}
 }
 
 .card footer {
@@ -93,11 +89,5 @@ footer .button-github {
 
 	svg {
 		scale: 150%;
-	}
-}
-
-@media only screen and (max-width: 768px) {
-	.card-wrapper {
-		width: 100%;
 	}
 }

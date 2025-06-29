@@ -1,41 +1,45 @@
 import {ArcElement, Chart as ChartJS, Legend, Tooltip} from "chart.js";
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
-import {ImageGallery} from "./components/ImageGallery/ImageGallery.tsx";
-import {ThemeContext} from "./contexts/theme-context";
+import {ImageGallery} from "./pages/ImageGallery/ImageGallery.tsx";
 import {ImageCarouselProvider} from "./components/ImageCarousel/ImageCarouselProvider.tsx";
 import Navbar from "./components/Navbar/Navbar.tsx";
-import './App.css'
-import {ProjectsPage} from "./components/ProjectsPage/ProjectsPage.tsx";
-import {FC, useState} from "react";
+import './App.scss'
+import {ProjectsPage} from "./pages/ProjectsPage/ProjectsPage.tsx";
+import {FC, useEffect} from "react";
+import themes from "./theme/palette";
+import {useTheme} from "./theme/theme";
+import {ModelsPage} from "./pages/ModelsPage/ModelsPage.tsx";
 
 export const App: FC = () => {
-    const isBrowserDefaultDark = () =>
-        window.matchMedia("(prefers-color-scheme: dark)").matches;
-
-    const getDefaultTheme = (): string => {
-        const localStorageTheme = localStorage.getItem("default-theme");
-        const browserDefault = isBrowserDefaultDark() ? "dark" : "light";
-        return localStorageTheme || browserDefault;
-    };
-
-    const [theme, setTheme] = useState(getDefaultTheme());
+    const {theme} = useTheme();
     ChartJS.register(ArcElement, Tooltip, Legend);
 
+    // Set CSS variables based on the current theme
+    useEffect(() => {
+        const currentTheme = themes[theme as keyof typeof themes];
+        if (currentTheme) {
+            Object.entries(currentTheme).forEach(([key, value]) => {
+                document.documentElement.style.setProperty(`--theme-${key}`, value as string);
+            });
+        }
+    }, [theme]);
+
     return (
-        <ThemeContext.Provider value={{theme, setTheme}}>
-            <ImageCarouselProvider>
-                <Router>
+        <ImageCarouselProvider>
+            <Router>
+                <div className={`theme-${theme}`} style={{height: '100%'}}>
                     <Navbar/>
-                    <div id="main" className={`theme-${theme}`}>
+                    <div id="main">
                         <Routes>
                             <Route path="/gallery" element={<ImageGallery/>}/>
                             <Route path="/projects" element={<ProjectsPage/>}/>
+                            <Route path="/models" element={<ModelsPage/>}/>
                             {/* Add more routes as needed */}
                         </Routes>
                     </div>
-                </Router>
-            </ImageCarouselProvider>
-        </ThemeContext.Provider>
+                </div>
+            </Router>
+        </ImageCarouselProvider>
     );
 }
 

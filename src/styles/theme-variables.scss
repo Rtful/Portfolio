@@ -1,32 +1,38 @@
 // Original component by Pandouby
 // Adapted with permission for use in my portfolio
 // Source: https://github.com/Pandouby/pandouby.github.io
+// 
+// NOTE: Color scheme has been moved to /src/theme/palette.ts
+// Make sure to keep both files in sync when making changes
+@use "sass:map";
+
+// Using CSS variables defined in App.tsx that reference palette.ts
 $themes: (
 	light: (
-		primaryColor: #f9fcff,
-		primaryShade: #dfe4ea,
-		secondaryColor: #2196f3,
-		backgroundColor: #e7ecf4,
-		boxShadowColor: rgba(118, 118, 118, 0.419),
-		textColor: #191717,
-		secondaryTextColor: #caccd0,
-		percentageColor: rgb(65, 65, 65),
-		projectTitleColor: #fff,
-		linkColor: #215ab7,
-        socialIconColor: #dfe4ea,
+		primaryColor: var(--theme-primaryColor),
+		primaryShade: var(--theme-primaryShade),
+		secondaryColor: var(--theme-secondaryColor),
+		backgroundColor: var(--theme-backgroundColor),
+		boxShadowColor: var(--theme-boxShadowColor),
+		textColor: var(--theme-textColor),
+		secondaryTextColor: var(--theme-secondaryTextColor),
+		percentageColor: var(--theme-percentageColor),
+		projectTitleColor: var(--theme-projectTitleColor),
+		linkColor: var(--theme-linkColor),
+        socialIconColor: var(--theme-socialIconColor),
 	),
 	dark: (
-		primaryColor: #242728,
-		primaryShade: #1c1e1f,
-		secondaryColor: #1c80d1,
-		backgroundColor: #2d3138,
-		boxShadowColor: rgba(33, 33, 33, 0.8),
-		textColor: #eff2f7,
-		secondaryTextColor: #6b6d70,
-		percentageColor: #464c56,
-		projectTitleColor: #fff,
-		linkColor: #215ab7,
-        socialIconColor: #31353c,
+		primaryColor: var(--theme-primaryColor),
+		primaryShade: var(--theme-primaryShade),
+		secondaryColor: var(--theme-secondaryColor),
+		backgroundColor: var(--theme-backgroundColor),
+		boxShadowColor: var(--theme-boxShadowColor),
+		textColor: var(--theme-textColor),
+		secondaryTextColor: var(--theme-secondaryTextColor),
+		percentageColor: var(--theme-percentageColor),
+		projectTitleColor: var(--theme-projectTitleColor),
+		linkColor: var(--theme-linkColor),
+        socialIconColor: var(--theme-socialIconColor),
 	),
 );
 
@@ -35,8 +41,8 @@ $themes: (
 		.theme-#{$theme} & {
 			$theme-map: () !global;
 			@each $key, $submap in $map {
-				$value: map-get(map-get($themes, $theme), "#{$key}");
-				$theme-map: map-merge(
+				$value: map.get(map.get($themes, $theme), "#{$key}");
+				$theme-map: map.merge(
 					$theme-map,
 					(
 						$key: $value,
@@ -50,5 +56,5 @@ $themes: (
 }
 
 @function themed($key) {
-	@return map-get($theme-map, $key);
+	@return map.get($theme-map, $key)
 }
