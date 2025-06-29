@@ -1,12 +1,23 @@
 // From https://css-loaders.com/factory/
+@use "../../styles/theme-variables.scss" as theme;
 
 .loader-container {
-  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100%;
   width: 100%;
+  z-index: 10000;
+  position: absolute;
+  display: none;
+
+  @include theme.themify(theme.$themes) {
+    background-color: theme.themed("backgroundColor");
+  }
+
+  &.active {
+    display: flex;
+  }
 }
 
 .loader.square {

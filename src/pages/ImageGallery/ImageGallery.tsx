@@ -58,19 +58,53 @@ export const ImageGallery = () => {
 
         classifyImageOrientations(imageObject).then((calculatedImages) => {
             setImages(calculatedImages);
-            setLoading(false);
         });
     }, [setImages]);
 
-    if (loading) {
-        return (
-            <Loader type={"square"}
-                    text={"Loading images"}/>
-        );
-    }
+    useEffect(() => {
+        if (images.length === 0) return;
+
+        const imgElements = Array.from(document.querySelectorAll('.three-d-image-container img')) as HTMLImageElement[];
+
+        let remaining = imgElements.length;
+
+        if (remaining === 0) {
+            setLoading(false);
+            return;
+        }
+
+        const onLoad = () => {
+            remaining--;
+            if (remaining === 0) setLoading(false);
+        };
+
+        imgElements.forEach((img) => {
+            if (img.complete) {
+                remaining--;
+            } else {
+                img.addEventListener('load', onLoad);
+                img.addEventListener('error', onLoad);
+            }
+        });
+
+        if (remaining === 0) setLoading(false);
+
+        return () => {
+            imgElements.forEach((img) => {
+                img.removeEventListener('load', onLoad);
+                img.removeEventListener('error', onLoad);
+            });
+        };
+    }, [images]);
 
     return (
         <>
+            {
+                <Loader type={"square"}
+                        text={"Loading images"}
+                        isLoading={loading}
+                />
+            }
             <h1>Gallery</h1>
             <ImageList
                 className="image-list"
