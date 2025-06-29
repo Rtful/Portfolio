@@ -1,15 +1,17 @@
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
-import { useTheme } from '@mui/material/styles';
+import {useTheme} from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import './ImageGallery.css';
+import './ImageGallery.scss';
+import {ThreeDImage} from "../../components/3dImage/3dImage";
 
-import { useEffect, useState } from "react";
-import { useImageCarousel } from "../../components/ImageCarousel/UseImageCarousel.ts";
-import { ImageWithOrientation } from "../../interfaces/ImageWithOrientation.ts";
+import {useEffect, useState} from "react";
+import {useImageCarousel} from "../../components/ImageCarousel/UseImageCarousel.ts";
+import {ImageWithOrientation} from "../../interfaces/ImageWithOrientation.ts";
+import {Loader} from "../../components/Loader/Loader.tsx";
 
 export const ImageGallery = () => {
-    const { showPopup, setImages, setCurrentIndex, images } = useImageCarousel();
+    const {showPopup, setImages, setCurrentIndex, images} = useImageCarousel();
     const [loading, setLoading] = useState(true);
 
     const theme = useTheme();
@@ -35,7 +37,7 @@ export const ImageGallery = () => {
             const parts = path.split('/');
             const fileName = parts[parts.length - 1];
             const nameWithoutExtension = fileName.replace(/\.[^/.]+$/, '');
-            return { path, name: nameWithoutExtension };
+            return {path, name: nameWithoutExtension};
         });
 
         async function classifyImageOrientations(images: ImageData[]): Promise<ImageWithOrientation[]> {
@@ -44,10 +46,10 @@ export const ImageGallery = () => {
                     const image = new Image();
                     image.onload = () => {
                         const aspectRatio = image.naturalWidth / image.naturalHeight;
-                        resolve({ ...img, aspectRatio });
+                        resolve({...img, aspectRatio});
                     };
                     image.onerror = () => {
-                        resolve({ ...img, aspectRatio: 1 });
+                        resolve({...img, aspectRatio: 1});
                     };
                     image.src = img.path;
                 });
@@ -62,9 +64,8 @@ export const ImageGallery = () => {
 
     if (loading) {
         return (
-            <div className="loading-screen">
-                <h1>Loading Gallery...</h1>
-            </div>
+            <Loader type={"square"}
+                    text={"Loading images"}/>
         );
     }
 
@@ -72,17 +73,17 @@ export const ImageGallery = () => {
         <>
             <h1>Gallery</h1>
             <ImageList
-                sx={{ width: "100%", height: "auto" }}
+                className="image-list"
+                sx={{width: "100%", height: "auto"}}
                 variant="masonry"
                 cols={cols}
-                gap={12}
+                gap={30}
             >
                 {images.map((item, index) => (
-                    <ImageListItem key={index}>
-                        <img
-                            src={item.path}
-                            alt={item.name}
-                            tabIndex={index}
+                    <ImageListItem key={index} className="three-d-image-container">
+                        <ThreeDImage
+                            path={item.path}
+                            name={item.name}
                             onClick={() => {
                                 setCurrentIndex(index);
                                 showPopup();

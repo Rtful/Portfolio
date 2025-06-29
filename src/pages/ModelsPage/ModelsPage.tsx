@@ -2,11 +2,13 @@ import './ModelsPage.scss';
 import { useTheme, createAppTheme } from "../../theme/theme.ts";
 import {useEffect, useState} from "react";
 import {StlViewer} from "react-stl-viewer";
+import {Loader} from "../../components/Loader/Loader.tsx";
 
 export const ModelsPage = () => {
     const { theme: currentTheme } = useTheme();
     const muiTheme = createAppTheme(currentTheme);
     const [modelUrls, setModelUrls] = useState<string[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const loadModels = async () => {
@@ -22,10 +24,17 @@ export const ModelsPage = () => {
             setModelUrls(urls);
         };
 
-        loadModels().then();
+        loadModels().then(() => {
+            setLoading(false);
+        });
     }, []);
 
-    console.log(modelUrls)
+    if (loading) {
+        return (
+            <Loader type={"factory"}
+                    text={"Loading 3d Models"}/>
+        );
+    }
 
     return (
         <>

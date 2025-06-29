@@ -17,10 +17,10 @@ export const themes = {
     socialIconColor: '#dfe4ea',
   },
   dark: {
-    primaryColor: '#242728',
+    primaryColor: '#424874',
     primaryShade: '#1c1e1f',
     secondaryColor: '#C0C9EE',
-    backgroundColor: '#424874',
+    backgroundColor: '#242728',
     boxShadowColor: 'rgba(33, 33, 33, 0.8)',
     textColor: '#eff2f7',
     secondaryTextColor: '#232425',
