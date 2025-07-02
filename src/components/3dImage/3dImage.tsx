@@ -15,6 +15,7 @@ export const ThreeDImage: FC<ThreeDImageProps> = ({
     const imgRef = useRef<HTMLImageElement>(null);
     const boundsRef = useRef<DOMRect>();
     const [transform, setTransform] = useState('');
+    const [glowBackground, setGlowBackground] = useState('');
 
     const rotateToMouse = (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
         const img = imgRef.current;
@@ -42,20 +43,43 @@ export const ThreeDImage: FC<ThreeDImageProps> = ({
                 ${-center.x / 100},
                 0,
                 ${Math.log(distance) * 2}deg
-            )
-        `);
+            )`);
+
+        setGlowBackground(`
+            radial-gradient(
+              circle at
+              ${center.x * 2 + bounds.width / 2}px
+              ${center.y * 2 + bounds.height / 2}px,
+              #ffffff55,
+              #0000000f
+            )`);
     }
 
     return (
-        <img
-            ref={imgRef}
-            className={'image-card'}
-            src={path}
-            alt={name}
-            onClick={onClick}
+        <div
+            className={'three-d-image-wrapper'}
             onMouseMove={rotateToMouse}
-            onMouseLeave={() => setTransform('')}
-            style={{transform}}
-        />
+            onMouseLeave={() => {
+                setTransform('');
+                setGlowBackground('');
+            }}
+            onClick={onClick}
+        >
+            <div
+                ref={imgRef}
+                className={'three-d-image'}
+                style={{transform}}
+            >
+                <img
+                    className={'image-card'}
+                    src={path}
+                    alt={name}
+                />
+                <div
+                    className="glow"
+                    style={{background: glowBackground}}
+                />
+            </div>
+        </div>
     );
 };

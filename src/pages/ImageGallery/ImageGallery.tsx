@@ -64,7 +64,7 @@ export const ImageGallery = () => {
     useEffect(() => {
         if (images.length === 0) return;
 
-        const imgElements = Array.from(document.querySelectorAll('.three-d-image-container img')) as HTMLImageElement[];
+        const imgElements = Array.from(document.querySelectorAll('.three-d-image img')) as HTMLImageElement[];
 
         let remaining = imgElements.length;
 
@@ -114,7 +114,7 @@ export const ImageGallery = () => {
                 gap={30}
             >
                 {images.map((item, index) => (
-                    <ImageListItem key={index} className="three-d-image-container">
+                    <ImageListItem key={index}>
                         <ThreeDImage
                             path={item.path}
                             name={item.name}

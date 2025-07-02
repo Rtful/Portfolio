@@ -93,7 +93,7 @@ export const createAppTheme = (currentTheme: string) => {
                         color: themeColors.secondaryTextColor,
                     }
                 }
-            }
+            },
         },
         palette: {
             primary: {

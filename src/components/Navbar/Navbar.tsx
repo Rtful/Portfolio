@@ -14,16 +14,16 @@ import './Navbar.scss';
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {createAppTheme, useTheme} from "../../theme/theme.ts";
 import MenuIcon from '@mui/icons-material/Menu';
-import {CSSProperties, useState} from "react";
+import {CSSProperties, FC, useState} from "react";
 
-const navItems = [
-    {label: 'Gallery', to: '/gallery'},
-    {label: 'Projects', to: '/projects'},
-    {label: '3D-Models', to: '/models'},
-    {label: 'About Me', to: '/about-me'},
-];
+interface NavbarProps {
+    navItems: {
+        label: string;
+        to: string;
+    }[];
+}
 
-export default function Navbar() {
+export const Navbar: FC<NavbarProps> = ({navItems}) => {
     const {theme: currentTheme} = useTheme();
     const muiTheme = createAppTheme(currentTheme);
     const isMdUp = useMediaQuery(muiTheme.breakpoints.up('md')); // true if ≥900px
@@ -46,7 +46,7 @@ export default function Navbar() {
             <Divider/>
             <List className={`nav-drawer-list ${mobileOpen ? 'open' : ''}`}>
                 {navItems.map((item, index) => (
-                    <ListItem key={item.label} disablePadding style={{ '--delay': `${(index) * 0.1}s` } as CSSProperties}>
+                    <ListItem key={item.label} disablePadding style={{'--delay': `${(index) * 0.1}s`} as CSSProperties}>
                         <ListItemButton
                             sx={{textAlign: 'center'}}
                             component={NavLink}

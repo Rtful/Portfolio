@@ -2,13 +2,20 @@ import {ArcElement, Chart as ChartJS, Legend, Tooltip} from "chart.js";
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import {ImageGallery} from "./pages/ImageGallery/ImageGallery.tsx";
 import {ImageCarouselProvider} from "./components/ImageCarousel/ImageCarouselProvider.tsx";
-import Navbar from "./components/Navbar/Navbar.tsx";
+import {Navbar} from "./components/Navbar/Navbar.tsx";
 import './App.scss'
 import {ProjectsPage} from "./pages/ProjectsPage/ProjectsPage.tsx";
 import {FC, useEffect} from "react";
 import themes from "./theme/palette";
 import {useTheme} from "./theme/theme";
 import {ModelsPage} from "./pages/ModelsPage/ModelsPage.tsx";
+import {AboutMe} from "./pages/AboutMe/AboutMe.tsx";
+
+const navItems = [
+    {label: 'Gallery', to: '/gallery'},
+    {label: 'Projects', to: '/projects'},
+    {label: '3D-Models', to: '/models'},
+];
 
 export const App: FC = () => {
     const {theme} = useTheme();
@@ -28,7 +35,9 @@ export const App: FC = () => {
         <ImageCarouselProvider>
             <Router>
                 <div className={`theme-${theme}`} style={{height: '100%'}}>
-                    <Navbar/>
+                    <Navbar
+                        navItems={navItems}
+                    />
                     <div id="main">
                         <Routes>
                             <Route path="/gallery" element={<ImageGallery/>}/>
